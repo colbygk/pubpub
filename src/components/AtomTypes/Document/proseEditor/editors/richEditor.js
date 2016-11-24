@@ -7,9 +7,10 @@ class AbstractEditor {
 
   constructor() {
     this._onAction = this._onAction.bind(this);
+    this.reconfigure = this.reconfigure.bind(this);
   }
 
-  create({place, contents, plugins}) {
+  create({place, contents, plugins, config}) {
     const {buildMenuItems} = require('../pubpubSetup');
     const {EditorState} = require('prosemirror-state');
     const {MenuBarEditorView, MenuItem} = require('prosemirror-menu');
@@ -30,10 +31,13 @@ class AbstractEditor {
 
     this.plugins = plugins;
 
-    const state = EditorState.create({
+    const stateConfig = {
     	doc: pubSchema.nodeFromJSON(contents),
     	plugins: plugins,
-    });
+      ...config
+    };
+
+    const state = EditorState.create(stateConfig);
 
      this.view = new MenuBarEditorView(place, {
       state: state,
@@ -51,6 +55,12 @@ class AbstractEditor {
     	clipboardParser: clipboardParser,
     	clipboardSerializer: clipboardSerializer,
     });
+  }
+
+  reconfigure(plugins, config) {
+    const state = this.view.editor.state;
+    const newState = state.reconfigure({plugins: plugins, ...config});
+    this.view.updateState(newState);
   }
 
   _handleDOMEvent = (_view, evt) => {

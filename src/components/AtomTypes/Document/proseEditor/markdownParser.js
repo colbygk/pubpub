@@ -18,12 +18,7 @@ export const markdownParser = new MarkdownParser(schema,
 	.use(embed),
 	{
 		blockquote: {block: 'blockquote'},
-		paragraph: {block: 'paragraph', attrs: tok => {
-			console.log(tok);
-			console.log(tok.content);
-			console.log(tok.children);
-			return {};
-		}},
+		paragraph: {block: 'paragraph'},
 		list_item: {block: 'list_item'},
 		bullet_list: {block: 'bullet_list'},
 		ordered_list: {block: 'ordered_list', attrs: tok => ({order: +tok.attrGet('order') || 1})},
