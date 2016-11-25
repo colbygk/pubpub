@@ -1102,6 +1102,19 @@ TESTING CSS
 	background-color: rgba(255,50,50,0.05);
 }
 
+.diff-marker.addition {
+		background-color: rgba(50,255,50,0.3);
+}
+
+.diff-marker.added {
+		background-color: rgba(50,255,50,0.3);
+}
+
+.diff-marker.removed {
+		background-color: rgba(255,50,50,0.3);
+		text-decoration: line-through;
+}
+
 @keyframes showHide {
     0% {
 			opacity:0;

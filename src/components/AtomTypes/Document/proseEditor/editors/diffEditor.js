@@ -2,19 +2,19 @@ import {AbstractEditor} from './richEditor';
 import {Plugin} from 'prosemirror-state';
 import {schema as pubSchema} from '../schema';
 
-var jsondiffpatch = require('jsondiffpatch').create({textDiff: {minLength: 3}});
-let highlightSet = null;
-
+// var jsondiffpatch = require('jsondiffpatch').create({textDiff: {minLength: 3}});
 
 const diffPlugin = new Plugin({
   state: {
     init(config, instance) {
 			const {DecorationSet, Decoration} = require("prosemirror-view");
-			console.log('reinited!', config);
-      return {deco: DecorationSet.empty, linkedEditor: config.linkedEditor, originalEditor: config.originalEditor};
+      return {deco: DecorationSet.empty,
+        linkedEditor: config.linkedEditor,
+        originalEditor: config.originalEditor,
+        showAsAdditions: config.showAsAdditions,
+      };
     },
-    applyAction(action, state, prev, editorState) {
-			console.log('Diff action!', action);
+    applyAction(action, state, prevEditorState, editorState) {
 			const {DecorationSet, Decoration} = require("prosemirror-view");
 			if (action.type === 'transform') {
 				state.linkedEditor.linkedTransform();
@@ -22,7 +22,7 @@ const diffPlugin = new Plugin({
 
 			if (action.type === 'transform' || action.type === 'linkedTransform') {
 	      const text1 = state.linkedEditor.getDiffStr();
-	      const text2 = state.originalEditor.getDiffStr();
+	      const text2 = state.originalEditor.getDiffStr(editorState);
 
 	      var jsdiff = require('diff');
 	      var diffResult = jsdiff.diffChars(text1, text2);
@@ -31,16 +31,29 @@ const diffPlugin = new Plugin({
 	      for (const diff of diffResult) {
 	        // const strippedString = diff.value.replace(/\s/g, '');
 					const strippedString = diff.value;
-	        if (diff.added || diff.removed) {
+          if (diff.removed) {
+            continue;
+          }
+	        if (diff.added) {
 	          const to = startCount;
 	          const from = startCount + strippedString.length;
-	          const deco = Decoration.inline(to, from, {class: "blame-marker"}, {inclusiveLeft: true, inclusiveRight: true});
+            let className = 'diff-marker';
+            if (state.showAsAdditions) {
+              className += ' added';
+            } else {
+              className += ' removed';
+            }
+	          const deco = Decoration.inline(to, from, {class: className}, {inclusiveLeft: true, inclusiveRight: true});
 	          decos.push(deco);
 	        }
 	        startCount += strippedString.length;
 	      }
 				const deco = DecorationSet.create(editorState.doc, decos);
-				return {deco, linkedEditor: state.linkedEditor, originalEditor: state.originalEditor};
+				return {deco,
+          linkedEditor: state.linkedEditor,
+          originalEditor: state.originalEditor,
+          showAsAdditions: state.showAsAdditions
+        };
 			}
 
       return state;
@@ -48,7 +61,6 @@ const diffPlugin = new Plugin({
   },
   props: {
     decorations(state) {
-			console.log('getting decos!');
       if (state && this.getState(state)) {
         return this.getState(state).deco;
       }
@@ -78,11 +90,11 @@ class DiffRichEditor extends AbstractEditor {
     this.create({place, contents: docJSON, plugins});
   }
 
-	linkEditor(linkedEditor) {
+	linkEditor(linkedEditor, {showAsAdditions}) {
     const {pubpubSetup} = require('../pubpubSetup');
     const plugins = pubpubSetup({schema: pubSchema});
 		const diffPlugins = plugins.concat(diffPlugin);
-		super.reconfigure(diffPlugins, {linkedEditor: linkedEditor, originalEditor: this});
+		super.reconfigure(diffPlugins, {linkedEditor, originalEditor: this, showAsAdditions});
 	}
 
 	linkedTransform() {
@@ -90,8 +102,15 @@ class DiffRichEditor extends AbstractEditor {
 		this._onAction(action);
 	}
 
-	getDiffStr() {
-		const doc = this.view.editor.state.doc;
+  // if newState exists, then use that instead of the default state
+  // this is useful if called by an action to get the top most diff
+	getDiffStr(newState) {
+		let doc;
+    if (!newState) {
+      doc = this.view.editor.state.doc;
+    } else {
+      doc = newState.doc;
+    }
 		const nodeSize = doc.nodeSize;
 		let diffStr = "";
 

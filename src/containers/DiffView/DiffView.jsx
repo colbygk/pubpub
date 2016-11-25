@@ -44,47 +44,18 @@ export const DiffView = React.createClass({
 		this.editor1 = new DiffRichEditor({place: place1, text: "# what \n heyyyyyyy \n# what \n ## hi \n # hi"});
 		this.editor2 = new DiffRichEditor({place: place2, text: "# what \n heyyyyyyy\n ## a\n# what \n ## hi \n # hi"});
 
-		this.editor2.linkEditor(this.editor1);
-		this.editor1.linkEditor(this.editor2);
+		this.editor2.linkEditor(this.editor1, {showAsAdditions: true});
+		this.editor1.linkEditor(this.editor2, {showAsAdditions: false});
 
-		// window.setTimeout(this.compareDiffs, 1000);
-
-	},
-
-	compareDiffs() {
-
-		var jsdiff = require('diff');
-
-		const doc1 = this.editor1.view.editor.state.doc;
-		const doc2 = this.editor2.view.editor.state.doc;
-		const str1 = this.logDoc(doc1);
-		const str2 = this.logDoc(doc2);
-
-		var diffResult = jsdiff.diffChars(str1, str2);
-		console.log(diffResult);
-		return;
-		const a = this.editor1.toJSON();
-		const b = this.editor2.toJSON();
-
-		console.log(JSON.stringify(a));
-		console.log(JSON.stringify(b));
-
-
-		var delta = jsondiffpatch.diff(a, b);
-		console.log('json diff:' , delta);
-		var changes = diff(a, b);
-		console.log('json diff2: ', changes);
-		var changes2 = diffchangeset(a, b);
-		console.log('json diff2: ', changes2);
 	},
 
 
 	render: function() {
 		return (
-			<div>
-				<div id="richeditor1">
+			<div style={{position: 'relative'}}>
+				<div style={[styles.editor, {display:'inline-block'}]} id="richeditor1">
 				</div>
-				<div id="richeditor2">
+				<div style={[styles.editor, {display:'inline-bock', position: 'absolute', right: '0px', top: '0px'}]}  id="richeditor2">
 				</div>
 			</div>
 		);
@@ -101,6 +72,11 @@ export default connect( state => {
 })( Radium(DiffView) );
 
 styles = {
+	editor: {
+		width: '40vw',
+		padding: '0px 2vw',
+		// position: 'absolute',
+	},
 	followButton: {
 		padding: '0em 1em ',
 		fontSize: '0.85em',
