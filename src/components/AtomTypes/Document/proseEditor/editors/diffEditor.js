@@ -20,31 +20,107 @@ const diffPlugin = new Plugin({
 				state.linkedEditor.linkedTransform();
 			}
 
+      if (action.type === 'patch') {
+        const diffIndex = action.diffIndex;
+        const diff = state.lastDiff[diffIndex];
+        //Removals always require an insertion, and possibly a deletion
+        //
+        if (diff.removed) {
+          const textNode = pubSchema.text(text);
+          const newT = state.tr.replaceWith(to, to, textNode);
+          const action = {
+            type: 'transform',
+            transform: newT
+          };
+          view.props.onAction(action);
+        }
+      }
+
 			if (action.type === 'transform' || action.type === 'linkedTransform') {
-	      const text1 = state.linkedEditor.getDiffStr();
-	      const text2 = state.originalEditor.getDiffStr(editorState);
+	      const diff1 = state.linkedEditor.getDiffStr();
+	      const diff2 = state.originalEditor.getDiffStr(editorState);
+        const text1 = diff1.diffStr;
+        const text2 = diff2.diffStr;
+
+        const diffMap = diff2.diffMap;
 
 	      var jsdiff = require('diff');
 	      var diffResult = jsdiff.diffChars(text1, text2);
-	      const decos = [];
+	      let decos = [];
 	      let startCount = 0;
-	      for (const diff of diffResult) {
+
+        // const initial = Decoration.inline(1,2,{class: 'diff-marker added'});
+        // decos.push(initial);
+
+        console.log('Diff result', diffResult);
+        console.log('Diff map', diffMap);
+	      for (let [diffIndex, diff] of diffResult.entries()) {
 	        // const strippedString = diff.value.replace(/\s/g, '');
 					const strippedString = diff.value;
           if (diff.removed) {
             continue;
           }
 	        if (diff.added) {
+
+            //must find biggest chunk
 	          const to = startCount;
 	          const from = startCount + strippedString.length;
+
+            const ranges = [];
+            let lastRange = {to: null, from: null};
+
+
+            // find the contigous ranges and turn them into a map
+            // need to join ranges afterwards
+            for (let i = to; i <= from; i++) {
+              if (i === from && diffMap[i] !== undefined) {
+                if (lastRange.to === null) {
+                  lastRange.to = diffMap[i];
+                  lastRange.from = diffMap[i];
+                } else {
+                  lastRange.from = diffMap[i];
+                }
+                ranges.push(lastRange);
+                continue;
+              }
+              if (diffMap[i] !== undefined && lastRange.to === null) {
+                lastRange.to = diffMap[i];
+              } else if (diffMap[i] === undefined && lastRange.to !== null) {
+                lastRange.from = diffMap[i - 1] + 1;
+                ranges.push(lastRange);
+                lastRange = {to: null, from: null};
+              }
+              if (i === from && diffMap[i] !== undefined) {
+                if (lastRange.to === null) {
+                  lastRange.to = diffMap[i];
+                  lastRange.from = diffMap[i] + 1;
+                } else {
+                  lastRange.from = diffMap[i] + 1;
+                }
+                ranges.push(lastRange);
+              }
+            }
+
             let className = 'diff-marker';
             if (state.showAsAdditions) {
               className += ' added';
             } else {
               className += ' removed';
             }
-	          const deco = Decoration.inline(to, from, {class: className}, {inclusiveLeft: true, inclusiveRight: true});
-	          decos.push(deco);
+            className += ` diff-index-${diffIndex}`
+            const patch = {to, from, text: strippedString };
+
+
+            const patchDecorations = ranges.map((range) => {
+              return Decoration.inline(range.to, range.from,
+                {class: className},
+                { inclusiveLeft: true,
+                  inclusiveRight: true,
+                  diffIndex
+                }
+              );
+            });
+	          decos = decos.concat(patchDecorations);
 	        }
 	        startCount += strippedString.length;
 	      }
@@ -52,7 +128,9 @@ const diffPlugin = new Plugin({
 				return {deco,
           linkedEditor: state.linkedEditor,
           originalEditor: state.originalEditor,
-          showAsAdditions: state.showAsAdditions
+          showAsAdditions: state.showAsAdditions,
+          lastDiff: diffResult,
+          lastDiffMap: diffMap,
         };
 			}
 
@@ -102,10 +180,15 @@ class DiffRichEditor extends AbstractEditor {
 		this._onAction(action);
 	}
 
+  patchDiff() {
+
+  }
+
   // if newState exists, then use that instead of the default state
   // this is useful if called by an action to get the top most diff
 	getDiffStr(newState) {
 		let doc;
+    const diffMap = {};
     if (!newState) {
       doc = this.view.editor.state.doc;
     } else {
@@ -114,23 +197,36 @@ class DiffRichEditor extends AbstractEditor {
 		const nodeSize = doc.nodeSize;
 		let diffStr = "";
 
-		for (let i = 0; i < nodeSize - 1; i++) {
-			const child = doc.nodeAt(i);
+    // non-leaf tokens have a start and end size
+		for (let nodeIndex = 0; nodeIndex < nodeSize - 1; nodeIndex++) {
+			const child = doc.nodeAt(nodeIndex);
+      // console.log(child);
 			if (child) {
-				let diffText = "";
+				let diffText = '';
 				if (child.isText) {
-					diffText = child.text;
-					i += child.nodeSize - 1;
+					diffText = '"' + child.text + '"';
+          // diffText = child.text
+          if (child.text.length !== child.nodeSize) {
+            console.log('WOAH THIS IS AN ISSUE');
+          }
+          for (var j = 0; j < child.nodeSize; j++) {
+            diffMap[diffStr.length + j + 1 ] = nodeIndex + j;
+          }
+					nodeIndex += child.nodeSize - 1;
 				} else {
 					diffText = child.type.name.charAt(0);
+          diffMap[diffStr.length] = nodeIndex;
+          // node attrs
 				}
 				diffStr += diffText;
 			} else {
-				diffStr += "Z";
+				diffStr += " ";
 			}
 
 		}
-		return diffStr;
+    console.log(diffStr);
+    // console.log(diffMap);
+		return {diffStr, diffMap};
 	}
 
 
