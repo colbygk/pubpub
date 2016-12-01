@@ -11,9 +11,11 @@ let styles = {};
 
 export const LatexEditor = React.createClass({
 	propTypes: {
-		latexString: PropTypes.string,
-    updateValue: PropTypes.func,
+		value: PropTypes.string,
     block: PropTypes.bool,
+    updateValue: PropTypes.func,
+    changeToBlock: PropTypes.func,
+    changeToInline: PropTypes.func,
 	},
 	getInitialState: function() {
     console.log('inital state!', this.props);
@@ -64,13 +66,8 @@ export const LatexEditor = React.createClass({
     return katex.renderToString(text, {displayMode: this.props.block, throwOnError: false});
   },
 
-  changeToBlock() {
-
-  },
-
   handleKeyPress: function(e) {
-     if (e.key === 'Enter') {
-       console.log('do validate');
+     if (e.key === 'Enter' && !this.props.block) {
        this.changeToNormal();
      }
   },
@@ -78,9 +75,9 @@ export const LatexEditor = React.createClass({
 
   renderDisplay() {
     const {displayHTML} = this.state;
-    const {value} = this.props;
+    const {value, block} = this.props;
     return (
-      <span style={styles.display}>
+      <span style={styles.display({block})}>
         <Style rules={ katexStyles } />
         <span ref={'latexElem'}
           onDoubleClick={this.changeToEditing}
@@ -93,7 +90,7 @@ export const LatexEditor = React.createClass({
 
   renderEdit() {
     const {clientWidth} = this.state;
-    const {value} = this.props;
+    const {value, block} = this.props;
     return (
       <span style={{position: 'relative'}}>
         <input
@@ -104,7 +101,11 @@ export const LatexEditor = React.createClass({
           onKeyPress={this.handleKeyPress}
           type="text" name="name"
           value={value} />
-        <div onClick={this.changeToBlock} style={styles.block}>Block</div>
+        {(block) ?
+          <div onClick={this.props.changeToInline} style={styles.block}>Inline</div>
+          : <div onClick={this.props.changeToBlock} style={styles.block}>Block</div>
+        }
+
       </span>
     );
   },
@@ -137,8 +138,10 @@ styles = {
     marginTop: '5px',
     cursor: 'pointer',
   },
-  display: {
-    fontSize: '0.9em',
+  display: function({block})  {
+    return {
+      fontSize: (block) ? '20px' : '0.9em',
+    };
   },
   editing: function({clientWidth}) {
     return {

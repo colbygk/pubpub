@@ -25,6 +25,8 @@ function computeChange(oldVal, newVal) {
 class LatexView {
   constructor(node, view, getPos, options) {
     this.valueChanged = this.valueChanged.bind(this);
+    this.changeToBlock = this.changeToBlock.bind(this);
+    this.changeToInline = this.changeToInline.bind(this);
     this.block = options.block;
 
     this.node = node
@@ -32,7 +34,7 @@ class LatexView {
     this.getPos = getPos
     this.value = node.textContent
     const domChild = (this.block) ? document.createElement('div') : document.createElement('span');
-		const reactElement = ReactDOM.render(<LatexEditor block={this.block} updateValue={this.valueChanged} value={this.value}/>, domChild);
+		const reactElement = this.renderElement(domChild);
 		const dom = domChild.childNodes[0];
     dom.contentEditable = false;
     this.dom = domChild;
@@ -40,17 +42,6 @@ class LatexView {
   }
 
   /*
-  valueChanged() {
-    let value = this.cm.getValue()
-    if (value != this.value) {
-      let change = computeChange(this.value, value)
-      this.value = value
-      let start = this.getPos() + 1
-      let tr = this.view.state.tr.replaceWith(start + change.from, start + change.to,
-                                              change.text ? schema.text(change.text) : null)
-      this.view.props.onAction(tr.action())
-    }
-  }
 
   maybeEscape(unit, dir) {
     let pos = this.cm.getCursor()
@@ -74,15 +65,40 @@ class LatexView {
     }
   }
 
+  renderElement(domChild) {
+    return ReactDOM.render(<LatexEditor
+      changeToBlock={this.changeToBlock}
+      changeToInline={this.changeToInline}
+      block={this.block}
+      updateValue={this.valueChanged}
+      value={this.value}/>, domChild);
+  }
+
   update(node) {
     if (node.type != this.node.type) return false
     this.node = node;
-    this.reactElement = ReactDOM.render(<LatexEditor block={this.block} updateValue={this.valueChanged} value={this.value}/>, this.dom);
+    this.reactElement = this.renderElement(this.dom);
     return true
   }
 
   changeToBlock() {
+    this.changeNode(schema.nodes.latex_block);
+  }
 
+  changeToInline() {
+    this.changeNode(schema.nodes.latex);
+  }
+
+  changeNode(nodeType) {
+
+    const nodeText = this.node.textContent;
+    const newNode = nodeType.create({}, schema.text(nodeText));
+
+    const start = this.getPos();
+    const end = start + this.node.nodeSize;
+
+    let tr = this.view.state.tr.replaceWith(start, end, newNode);
+    this.view.props.onAction(tr.action());
   }
 
   /*
