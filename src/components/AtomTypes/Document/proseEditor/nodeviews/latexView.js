@@ -3,17 +3,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {schema} from '../schema';
 
-function wrapDOM(dom) {
-  let dummy = document.createElement("div")
-  dummy.textContent = "\u200b"
-  dummy.style.height = 0
-  let wrap = document.createElement("div")
-  wrap.appendChild(dummy.cloneNode(true))
-  wrap.appendChild(dom)
-  wrap.appendChild(dummy)
-  return wrap
-}
-
 function computeChange(oldVal, newVal) {
   let start = 0, oldEnd = oldVal.length, newEnd = newVal.length
   while (start < oldEnd && oldVal.charCodeAt(start) == newVal.charCodeAt(start)) ++start
@@ -27,8 +16,9 @@ class LatexView {
     this.valueChanged = this.valueChanged.bind(this);
     this.changeToBlock = this.changeToBlock.bind(this);
     this.changeToInline = this.changeToInline.bind(this);
-    this.block = options.block;
 
+
+    this.block = options.block;
     this.node = node
     this.view = view
     this.getPos = getPos

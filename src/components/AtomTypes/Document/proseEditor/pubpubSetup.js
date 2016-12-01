@@ -25,21 +25,21 @@
 
 const {blockQuoteRule, orderedListRule, bulletListRule, codeBlockRule, headingRule,
        inputRules, allInputRules} = require("prosemirror-inputrules")
-// const {keymap} = require("prosemirror-keymap")
+const {keymap} = require("prosemirror-keymap")
 const {history} = require("prosemirror-history")
 const {baseKeymap} = require("prosemirror-commands")
 const {Plugin} = require("prosemirror-state")
 
 const {buildMenuItems} = require("./menu")
 exports.buildMenuItems = buildMenuItems
-// const {buildKeymap} = require("./keymap")
-// exports.buildKeymap = buildKeymap
+const {buildKeymap} = require("./keymap")
+exports.buildKeymap = buildKeymap
 
 function pubpubSetup(options) {
   let deps = [
     inputRules({rules: allInputRules.concat(buildInputRules(options.schema))}),
-    // keymap(buildKeymap(options.schema, options.mapKeys)),
-    // keymap(baseKeymap)
+    keymap(buildKeymap(options.schema, options.mapKeys)),
+    keymap(baseKeymap)
   ]
   if (options.history !== false) deps.push(history())
 
