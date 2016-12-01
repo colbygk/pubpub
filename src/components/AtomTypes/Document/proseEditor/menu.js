@@ -61,8 +61,8 @@ const insertEmbed = (atomType, state, _, view, nodeType) => {
     view.props.onAction(view.state.tr.replaceSelection(nodeType.createAndFill(nodeAttrs)).action());
 		// callback(nodeAttrs);
 	};
-  const nodesInDoc = ElementSchema.getElementsInDocument();
-
+  // const nodesInDoc = ElementSchema.getElementsInDocument();
+  const nodesInDoc = [];
   switch(atomType) {
     case 'reference':
     case 'latex':

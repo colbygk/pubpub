@@ -1,6 +1,7 @@
 import {migrateDiffs, migrateMarks, schema as pubSchema} from '../schema';
 
 import ElementSchema from '../elementSchema';
+import EmbedView from './embedView';
 import {Plugin} from 'prosemirror-state';
 
 class AbstractEditor {
@@ -23,11 +24,13 @@ class AbstractEditor {
 
     // migrateMarks(contents);
 
+    /*
     ElementSchema.initiateProseMirror({
     	changeNode: this.changeNode,
     	setEmbedAttribute: this.setEmbedAttribute,
     	getState: this.getState,
     });
+    */
 
     this.plugins = plugins;
 
@@ -49,11 +52,14 @@ class AbstractEditor {
     			ElementSchema.unmountNode(node);
     		}
     	},
-    	handleDOMEvent: this._handleDOMEvent,
+    	// handleDOMEvent: this._handleDOMEvent,
       menuContent: menu.fullMenu,
     	spellcheck: true,
     	clipboardParser: clipboardParser,
     	clipboardSerializer: clipboardSerializer,
+      nodeViews: {
+        embed: (node, view, getPos) => new CodeBlockView(node, view, getPos)
+      }
     });
   }
 

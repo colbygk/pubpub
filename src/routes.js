@@ -3,6 +3,7 @@ import {App, Atom, DiffView, EmailVerification, IframePub, JournalCreate, Journa
 import {IndexRoute, Route} from 'react-router';
 
 import React from 'react';
+import {TestEditorView} from 'containers';
 
 function loadComponent(component) {
 	if (__CLIENT__ && !__DEVELOPMENT__) return (location, cb) => component(module => cb(null, module.default || module));
@@ -55,6 +56,7 @@ export default () => {
 
 			<Route path="/test/diff" getComponent={loadComponent(DiffView)}/>
 			<Route path="/test/review" getComponent={loadComponent(ReviewView)}/>
+			<Route path="/test/edit" getComponent={loadComponent(TestEditorView)}/>
 
 
 			<Route path="/verify/:hash" getComponent={loadComponent(EmailVerification)}/>
