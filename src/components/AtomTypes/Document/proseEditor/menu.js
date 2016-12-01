@@ -100,8 +100,15 @@ function insertLatexEmbed(nodeType) {
     title: "Insert LateX",
     label: "LaTeX",
     select(state) { return canInsert(state, nodeType) },
-    run(state, _, view) {
-      insertEmbed('latex', state, _, view, nodeType);
+    run(state, onAction)  {
+      console.log(nodeType.create);
+      const newNode = nodeType.create({}, schema.text('2x2'));
+
+      // const node = newNode.replace(0, 1, "a");
+      // newNode.content = schema.text('2x2');
+      // console.log(newNode);
+      // console.log(newNode);
+      onAction(state.tr.replaceSelectionWith(newNode).action())
     }
   })
 }
@@ -285,10 +292,12 @@ function buildMenuItems(schema) {
     r.insertImageEmbed = insertImageEmbed(type)
 
   if (type = schema.nodes.embed) {
-    r.insertLatexEmbed = insertLatexEmbed(type)
     r.insertReferenceEmbed = insertReferenceEmbed(type)
   }
 
+  if (type = schema.nodes.latex) {
+    r.insertLatexEmbed = insertLatexEmbed(type)
+  }
 
   if (type = schema.nodes.bullet_list)
     r.wrapBulletList = wrapListItem(type, {

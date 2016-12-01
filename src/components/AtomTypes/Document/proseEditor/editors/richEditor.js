@@ -1,7 +1,7 @@
+import {EmbedView, LatexView} from '../nodeviews';
 import {migrateDiffs, migrateMarks, schema as pubSchema} from '../schema';
 
 import ElementSchema from '../elementSchema';
-import EmbedView from './embedView';
 import {Plugin} from 'prosemirror-state';
 
 class AbstractEditor {
@@ -58,7 +58,9 @@ class AbstractEditor {
     	clipboardParser: clipboardParser,
     	clipboardSerializer: clipboardSerializer,
       nodeViews: {
-        embed: (node, view, getPos) => new CodeBlockView(node, view, getPos)
+        embed: (node, view, getPos) => new EmbedView(node, view, getPos),
+        latex: (node, view, getPos) => new LatexView(node, view, getPos, {block: false}),
+        latex_block: (node, view, getPos) => new LatexView(node, view, getPos, {block: true}),
       }
     });
   }
@@ -69,34 +71,14 @@ class AbstractEditor {
     this.view.updateState(newState);
   }
 
+  /*
   _handleDOMEvent = (_view, evt) => {
-    // console.log(evt, ElementSchema.currentlyEditing(), evt2);
-    // return;
-    if (ElementSchema.currentlyEditing()) {
-      const eventType = evt.type;
-      // && eventType.indexOf('drag') === -1
-      if (evt.target && evt.target.className && evt.target.className.indexOf('caption') !== -1 && !evt.dataTransfer) {
-        if (eventType === 'mousedown') {
-          return true;
-        }
-        return false;
-      }
-      if (eventType === 'mousedown') {
-        if (ElementSchema.checkPoint(evt.target)) {
-          return false;
-        }
-      }
-      if (eventType === 'keydown' && (evt.key === 'Delete' || evt.code === 'Backspace')) {
-        return false;
-      }
-      evt.preventDefault();
-      return true;
-    }
     if (evt.type === 'paste') {
       setTimeout(ElementSchema.countNodes, 200);
     }
     return false;
   }
+  */
 
 
   _onAction (action) {
@@ -115,9 +97,6 @@ class AbstractEditor {
 
     const newState = this.view.editor.state.applyAction(action);
     this.view.updateState(newState);
-    if (action.type === "selection") {
-      ElementSchema.onNodeSelect(newState, action.selection);
-    }
   }
 
   _createDecorations = (editorState) => {

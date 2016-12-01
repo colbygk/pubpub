@@ -13,6 +13,7 @@ function wrapDOM(dom) {
 
 class EmbedView {
   constructor(node, view, getPos) {
+    console.log('made embed view!!!');
     this.node = node
     this.view = view
     this.getPos = getPos

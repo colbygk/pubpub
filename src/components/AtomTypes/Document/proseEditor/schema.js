@@ -47,6 +47,27 @@ const Emoji = {
   inline: true,
 }
 
+const Latex = {
+  group: 'inline',
+  content: "text*",
+  /*
+  attrs: {
+    content: {default: ''},
+  },
+  */
+  inline: true,
+}
+
+const LatexBlock = {
+  group: 'block',
+  content: "text*",
+  /*
+  attrs: {
+    content: {default: ''},
+  },
+  */
+}
+
 const Embed = {
 	attrs: {
 		source: {default: ''},
@@ -133,7 +154,13 @@ const BlockEmbed = {
 	locked: true,
 };
 
-const schemaNodes = basicSchema.nodeSpec.addBefore('image', 'embed', Embed).addBefore('image', 'block_embed', BlockEmbed).addBefore('horizontal_rule', 'page_break', PageBreak).addBefore('image', 'emoji', Emoji);
+const schemaNodes = basicSchema.nodeSpec
+.addBefore('image', 'embed', Embed)
+.addBefore('image', 'block_embed', BlockEmbed)
+.addBefore('image', 'latex', Latex)
+.addBefore('image', 'latex_block', LatexBlock)
+.addBefore('horizontal_rule', 'page_break', PageBreak)
+.addBefore('image', 'emoji', Emoji);
 const listSchema = addListNodes(schemaNodes, "paragraph block*", "block");
 const tableSchema = addTableNodes(listSchema, "paragraph block*", "block");
 
