@@ -58,7 +58,7 @@ class AbstractEditor {
     	clipboardParser: clipboardParser,
     	clipboardSerializer: clipboardSerializer,
       nodeViews: {
-        embed: (node, view, getPos) => new EmbedView(node, view, getPos),
+        block_embed: (node, view, getPos) => new EmbedView(node, view, getPos, {block: true}),
         latex: (node, view, getPos) => new LatexView(node, view, getPos, {block: false}),
         latex_block: (node, view, getPos) => new LatexView(node, view, getPos, {block: true}),
       }

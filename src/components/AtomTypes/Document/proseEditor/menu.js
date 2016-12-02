@@ -73,6 +73,7 @@ const insertEmbed = (atomType, state, _, view, nodeType) => {
 
 };
 
+/*
 function insertImageEmbed(nodeType) {
   return new MenuItem({
     title: "Insert Image",
@@ -82,7 +83,27 @@ function insertImageEmbed(nodeType) {
       insertEmbed('image', state, _, view, nodeType);
     }
   })
+}*/
+
+function insertImageEmbed(nodeType) {
+  return new MenuItem({
+    title: "Insert Image",
+    label: "Image",
+    select(state) { return canInsert(state, nodeType) },
+    run(state, onAction) {
+      const newNode = nodeType.create({
+        source: 'https://jake.pubpub.org/unsafe/fit-in/650x0/https://assets.pubpub.org/pkdrsxsr/1478554075403.jpg',
+        align: 'full',
+        size: '50%',
+        caption: 'Hi this is a caption',
+        citeCount: 1,
+        context: 'document'
+      });
+      onAction(state.tr.replaceSelectionWith(newNode).action());
+    }
+  })
 }
+
 
 function insertReferenceEmbed(nodeType) {
   return new MenuItem({

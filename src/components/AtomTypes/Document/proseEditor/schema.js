@@ -47,6 +47,19 @@ const Emoji = {
   inline: true,
 }
 
+
+const Mention = {
+  group: 'inline',
+  content: "text*",
+  /*
+  attrs: {
+    content: {default: ''},
+  },
+  */
+  inline: true,
+}
+
+
 const Latex = {
   group: 'inline',
   content: "text*",
@@ -160,7 +173,9 @@ const schemaNodes = basicSchema.nodeSpec
 .addBefore('image', 'latex', Latex)
 .addBefore('image', 'latex_block', LatexBlock)
 .addBefore('horizontal_rule', 'page_break', PageBreak)
-.addBefore('image', 'emoji', Emoji);
+.addBefore('image', 'emoji', Emoji)
+.addBefore('image', 'mention', Mention);
+
 const listSchema = addListNodes(schemaNodes, "paragraph block*", "block");
 const tableSchema = addTableNodes(listSchema, "paragraph block*", "block");
 
