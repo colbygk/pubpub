@@ -1,4 +1,4 @@
-import {EmbedView, LatexView} from '../nodeviews';
+import {EmbedView, LatexView, MentionView} from '../nodeviews';
 import {migrateDiffs, migrateMarks, schema as pubSchema} from '../schema';
 
 import ElementSchema from '../elementSchema';
@@ -61,6 +61,7 @@ class AbstractEditor {
         block_embed: (node, view, getPos) => new EmbedView(node, view, getPos, {block: true}),
         latex: (node, view, getPos) => new LatexView(node, view, getPos, {block: false}),
         latex_block: (node, view, getPos) => new LatexView(node, view, getPos, {block: true}),
+        mention: (node, view, getPos) => new MentionView(node, view, getPos, {block: false}),
       }
     });
   }

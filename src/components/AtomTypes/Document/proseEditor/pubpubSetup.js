@@ -24,7 +24,7 @@
 
 
 const {blockQuoteRule, orderedListRule, bulletListRule, codeBlockRule, headingRule,
-       inputRules, allInputRules} = require("prosemirror-inputrules")
+       inputRules, allInputRules, InputRule} = require("prosemirror-inputrules")
 const {keymap} = require("prosemirror-keymap")
 const {history} = require("prosemirror-history")
 const {baseKeymap} = require("prosemirror-commands")
@@ -64,6 +64,17 @@ function buildInputRules(schema) {
   if (type = schema.nodes.bullet_list) result.push(bulletListRule(type))
   if (type = schema.nodes.code_block) result.push(codeBlockRule(type))
   if (type = schema.nodes.heading) result.push(headingRule(type, 6))
+
+
+  if (type = schema.nodes.mention) {
+    const mentionRule = new InputRule(new RegExp("@$"), (state, match, start, end) => {
+      console.log('adding mention!');
+      return state.tr.replaceWith(start, end, type.create({}))
+    });
+    result.push(mentionRule);
+  }
+
+
   return result
 }
 

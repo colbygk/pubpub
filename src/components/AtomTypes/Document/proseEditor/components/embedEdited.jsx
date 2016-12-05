@@ -12,7 +12,7 @@ let styles = {};
 
 export const EmbedEdited = React.createClass({
 	propTypes: {
-		imageSource: PropTypes.string,
+		source: PropTypes.string,
 
 		align: PropTypes.oneOf(['inline', 'full', 'left', 'right', 'inline-word']),
 		size: PropTypes.string,

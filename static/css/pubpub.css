@@ -1130,6 +1130,23 @@ textarea::-webkit-resizer {
   display: none;
 }
 
+.mention {
+	background-color: #0f9960;
+	color: #ffffff;
+	border-color: rgba(16, 22, 26, 0.1) rgba(16, 22, 26, 0.1) rgba(16, 22, 26, 0.3) rgba(16, 22, 26, 0.1);
+  box-shadow: 0 1px 1px rgba(16, 22, 26, 0.2);
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 0px 4px 0px 2px;
+  cursor: pointer;
+}
+
+.mention:hover {
+	background-color: #0d8050;
+	color: #ffffff;
+}
+
+
 @keyframes showHide {
     0% {
 			opacity:0;

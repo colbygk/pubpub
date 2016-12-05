@@ -1,0 +1,1 @@
+export DiffPlugin from './diffPlugin';
