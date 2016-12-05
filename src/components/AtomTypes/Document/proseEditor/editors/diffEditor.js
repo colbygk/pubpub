@@ -49,11 +49,9 @@ const diffPlugin = new Plugin({
 	      let decos = [];
 	      let startCount = 0;
 
-        // const initial = Decoration.inline(1,2,{class: 'diff-marker added'});
-        // decos.push(initial);
 
-        console.log('Diff result', diffResult);
-        console.log('Diff map', diffMap);
+        // console.log('Diff result', diffResult);
+        // console.log('Diff map', diffMap);
 	      for (let [diffIndex, diff] of diffResult.entries()) {
 	        // const strippedString = diff.value.replace(/\s/g, '');
 					const strippedString = diff.value;
@@ -67,12 +65,26 @@ const diffPlugin = new Plugin({
 	          const from = startCount + strippedString.length;
 
             const ranges = [];
-            let lastRange = {to: null, from: null};
-
+            let lastRange = {type: 'inline', to: null, from: null};
+            let lastNode = null;
 
             // find the contigous ranges and turn them into a map
             // need to join ranges afterwards
             for (let i = to; i <= from; i++) {
+              if (diffMap[i] && diffMap[i].type) {
+                if (lastNode === diffMap[i].index) {
+                  continue;
+                }
+                lastNode = diffMap[i].index;
+                ranges.push({
+                  type: 'node',
+                  to: diffMap[i].index,
+                  from: diffMap[i].index + 1
+                });
+                continue;
+              } else {
+                lastNode = null;
+              }
               if (i === from && diffMap[i] !== undefined) {
                 if (lastRange.to === null) {
                   lastRange.to = diffMap[i];
@@ -88,7 +100,7 @@ const diffPlugin = new Plugin({
               } else if (diffMap[i] === undefined && lastRange.to !== null) {
                 lastRange.from = diffMap[i - 1] + 1;
                 ranges.push(lastRange);
-                lastRange = {to: null, from: null};
+                lastRange = {type: 'inline', to: null, from: null};
               }
               if (i === from && diffMap[i] !== undefined) {
                 if (lastRange.to === null) {
@@ -112,15 +124,20 @@ const diffPlugin = new Plugin({
 
 
             const patchDecorations = ranges.map((range) => {
-              return Decoration.inline(range.to, range.from,
-                {class: className},
-                { inclusiveLeft: true,
-                  inclusiveRight: true,
-                  diffIndex
-                }
-              );
+              if (range.type === 'node') {
+                return Decoration.node(range.to, range.from, {class: className}, {diffIndex});
+              } else {
+                return Decoration.inline(range.to, range.from,
+                  {class: className},
+                  { inclusiveLeft: true,
+                    inclusiveRight: true,
+                    diffIndex
+                  }
+                );
+              }
             });
 	          decos = decos.concat(patchDecorations);
+            console.log(decos);
 	        }
 	        startCount += strippedString.length;
 	      }
@@ -213,7 +230,14 @@ class DiffRichEditor extends AbstractEditor {
             diffMap[diffStr.length + j + 1 ] = nodeIndex + j;
           }
 					nodeIndex += child.nodeSize - 1;
-				} else {
+				} else if (child.type.name === 'block_embed') {
+          const attrsStr = JSON.stringify(child.attrs);
+          // diffText = 'embed' + attrsStr + ' ';
+          diffText = 'embed ';
+          for (var j = 0; j < diffText.length - 1; j++) {
+            diffMap[diffStr.length + j] = {type: 'embed', index: nodeIndex};
+          }
+        } else {
 					diffText = child.type.name.charAt(0);
           diffMap[diffStr.length] = nodeIndex;
           // node attrs

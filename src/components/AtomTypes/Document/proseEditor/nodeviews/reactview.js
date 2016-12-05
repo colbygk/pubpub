@@ -47,6 +47,7 @@ class ReactView {
   }
 
   update(node, decorations) {
+    console.log(decorations);
     if (node.type != this.node.type) return false
     this.node = node;
     this.reactElement = this.renderElement(this.dom);
