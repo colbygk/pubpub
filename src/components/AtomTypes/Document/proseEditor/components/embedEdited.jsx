@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 
 import ReactDOM from 'react-dom';
 import Resizable from 'react-resizable-box';
+import TextArea from 'react-textarea-autosize';
 
 // import EmbedEditor from './EmbedEditor';
 
@@ -19,6 +20,8 @@ export const EmbedEdited = React.createClass({
 		citeCount: PropTypes.number,
 		context: PropTypes.oneOf(['reference-list', 'document', 'library']), // where the embed is being used
 		nodeId: PropTypes.number,
+
+    updateAttrs: PropTypes.func,
 	},
 	getInitialState: function() {
 		return {
@@ -53,59 +56,66 @@ export const EmbedEdited = React.createClass({
 	},
 
 	setSelected: function(selected) {
+		console.log('update selected!', selected);
 		this.setState({selected});
 	},
 
-	updateParams: function(newAttrs) {
-		this.props.updateParams(this.props.nodeId, newAttrs);
-	},
-
-	typeNewCaption: function() {
-		const newCaption = this.refs.captionInput.value;
-		this.updateParams({caption: newCaption});
-		this.refs.captionInput.focus();
+	updateAttrs: function(newAttrs) {
+		this.props.updateAttrs(newAttrs);
 	},
 
 	focusCaption: function() {
 		this.refs.captionInput.focus();
 	},
 
+	typeNewCaption: function() {
+		const newCaption = this.refs.captionInput.value;
+		this.updateAttrs({caption: newCaption});
+	},
+
 	render: function() {
+		const {size, caption, align, source} = this.props;
+		const {selected} = this.state;
+
 		const data = this.props.data || {};
 		// Data is the version object with a populated parent field.
 		// The parent field is the atomData field
 
 
-		const selected = this.state.selected;
-
-    console.log('image src', this.props.source);
-
 		return (
-			<div ref="embedroot" className={'pub-embed ' + this.props.className}>
-				<figure style={styles.figure({size: this.props.size, align: this.props.align})}>
-				<div style={{width: this.props.size, position: 'relative', display: 'table-row'}}>
+			<div ref="embedroot" style={styles.outline({selected})} className={'pub-embed ' + this.props.className}>
+				<figure style={styles.figure({size, align})}>
+				<div style={{width: size, position: 'relative', display: 'table-row'}}>
 				<Resizable
 					width={'100%'}
 					height={'auto'}
 					maxWidth={650}
-					customStyle={styles.outline({selected})}
+					customStyle={styles.outline({false})}
 					onResizeStop={(direction, styleSize, clientSize, delta) => {
 						const ratio = (clientSize.width / 650) * 100;
-						this.updateParams({size: ratio + '%' });
+						this.updateAttrs({size: ratio + '%' });
 					}}>
-						<img src={this.props.source}></img>
+						<img draggable="false" style={styles.image} src={source}></img>
 				</Resizable>
 			</div>
-			<figcaption style={styles.caption({size: this.props.size, align: this.props.align})}>
-				<span
-					draggable="false"
-					className="caption"
-					ref="captionInput"
-					contentEditable="false"
-
-					style={styles.captionText({align: this.props.align})}>
-					{this.props.caption}
-				</span>
+			<figcaption style={styles.caption({size, align})}>
+				 <TextArea
+					 ref="captionInput"
+					 style={styles.captionInput}
+					 onChange={this.typeNewCaption}
+					 onKeyPress={this.handleKeyPress}
+					 value={caption}
+					 />
+				{/*
+					<span
+						className="caption"
+						ref="captionInput"
+						contentEditable="true"
+						onKeyPress={this.typeNewCaption}
+						style={styles.captionText({align: this.props.align})}>
+						{this.props.caption}
+					</span>
+					*/}
 			</figcaption>
 			</figure>
 			</div>
@@ -114,6 +124,14 @@ export const EmbedEdited = React.createClass({
 });
 
 styles = {
+	image: {
+		width: '100%',
+	},
+	captionInput: {
+		width: '100%',
+		border: 'none',
+		fontSize: '1em'
+	},
 	embed: function({size}) {
 
 		const style = {
@@ -161,6 +179,7 @@ styles = {
 		return {
 			outline: (selected) ? '3px solid #BBBDC0' : '3px solid transparent',
 			transition: 'outline-color 0.15s ease-in',
+			paddingTop: '10px',
 
 		};
 	},

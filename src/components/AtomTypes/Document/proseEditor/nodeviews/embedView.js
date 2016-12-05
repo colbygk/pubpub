@@ -16,21 +16,17 @@ class EmbedView extends ReactView {
   renderElement(domChild) {
     const node = this.node;
     // updateParams={this.updateNodeParams} {...node.attrs}
-    return ReactDOM.render(<EmbedEdited updateParams={this.updateParams} {...node.attrs}/>, domChild);
-  }
-
-  updateParams() {
-
+    return ReactDOM.render(<EmbedEdited updateAttrs={this.valueChanged} {...node.attrs}/>, domChild);
   }
 
 	valueChanged(nodeAttrs) {
     const start = this.getPos();
     const nodeType = schema.nodes.block_embed;
-		const transform = this.view.state.tr.setNodeType(start, nodeType, nodeAttrs);
+    const oldNodeAttrs = this.node.attrs;
+		const transform = this.view.state.tr.setNodeType(start, nodeType,  {...oldNodeAttrs, ...nodeAttrs});
 		const action = transform.action();
-		this.applyAction(action);
+		this.view.props.onAction(action);
 	}
-
 
   changeToBlock() {
     this.changeNode(schema.nodes.block_embed);
@@ -39,6 +35,15 @@ class EmbedView extends ReactView {
   changeToInline() {
     this.changeNode(schema.nodes.embed);
   }
+
+  selectNode() {
+    this.reactElement.setSelected(true);
+  }
+
+  deselectNode() {
+    this.reactElement.setSelected(false);
+  }
+
 }
 
 export default EmbedView;

@@ -211,7 +211,7 @@
     "react-select": "^1.0.0-beta14",
     "react-selectize": "^2.0.2",
     "react-sticky": "^5.0.4",
-    "react-textarea-autosize": "^4.0.1",
+    "react-textarea-autosize": "^4.0.5",
     "redux": "^3.5.2",
     "redux-router": "2.0.0",
     "rss": "^1.2.1",
