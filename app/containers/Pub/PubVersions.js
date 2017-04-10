@@ -222,8 +222,7 @@ export const PubVersions = React.createClass({
 				console.log('got url!', file.url);
 				request
 				.post(PUBPUB_CONVERSION_URL)
-				.send({ inputType: 'pub', outputType: outputType, inputUrl: file.url, metadata: metadata,
-					 options: { template: selectedTemplate} })
+				.send({ inputType: 'pub', outputType: outputType, inputUrl: file.url, metadata: metadata, options: { template: selectedTemplate } })
 				.set('Accept', 'application/json')
 				.end((err, res) => {
 					if (err || !res.ok) {
@@ -405,7 +404,7 @@ export const PubVersions = React.createClass({
 			</div>
 		</Dialog>
 
-					{versions.sort((foo, bar)=> {
+				{versions.sort((foo, bar)=> {
 					// Sort so that most recent is first in array
 					if (foo.createdAt > bar.createdAt) { return -1; }
 					if (foo.createdAt < bar.createdAt) { return 1; }
@@ -510,6 +509,15 @@ export const PubVersions = React.createClass({
 														/>)
 												})
 											}
+											<MenuItem
+												text={
+													<a href={downloadMarkdownUrl}>
+														<div>
+															<b>Markdown</b>
+														</div>
+												</a>
+												}
+											/>
 											</Menu>
 									} position={Position.BOTTOM}>
 										<Button loading={conversionLoading} className={'pt-button p2-minimal'} onClick={''} text="Export" />
