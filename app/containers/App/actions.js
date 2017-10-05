@@ -22,7 +22,7 @@ export const LOGOUT_FAIL = 'app/LOGOUT_FAIL';
 export function login() {
 	return (dispatch) => {
 		dispatch({ type: LOGIN_GET_LOAD });
-		return clientFetch('/api/login')
+		return clientFetch('/login')
 		.then((result) => {
 			dispatch({ type: LOGIN_GET_SUCCESS, result });
 		})
@@ -36,7 +36,7 @@ export function logout(hash) {
 	return (dispatch) => {
 		dispatch({ type: LOGOUT_LOAD });
 
-		return clientFetch('/api/logout', {
+		return clientFetch('/logout', {
 			method: 'GET'
 		})
 		.then((result) => {

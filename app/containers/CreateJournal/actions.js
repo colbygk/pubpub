@@ -19,7 +19,7 @@ export function createJournal(createData) {
 	return (dispatch) => {
 		dispatch({ type: CREATE_JOURNAL_LOAD });
 
-		return clientFetch('/api/journal', {
+		return clientFetch('/journal', {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',

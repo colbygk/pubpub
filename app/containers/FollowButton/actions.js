@@ -68,7 +68,7 @@ export function postFollowsPub(pubId) {
 	return (dispatch) => {
 		dispatch({ type: POST_FOLLOWS_PUB_LOAD });
 
-		return clientFetch('/api/follows/pub', {
+		return clientFetch('/follows/pub', {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',
@@ -92,7 +92,7 @@ export function putFollowsPub(pubId, putOptions) {
 	return (dispatch) => {
 		dispatch({ type: PUT_FOLLOWS_PUB_LOAD });
 
-		return clientFetch('/api/follows/pub', {
+		return clientFetch('/follows/pub', {
 			method: 'PUT',
 			headers: {
 				Accept: 'application/json',
@@ -117,7 +117,7 @@ export function deleteFollowsPub(pubId) {
 	return (dispatch) => {
 		dispatch({ type: DELETE_FOLLOWS_PUB_LOAD });
 
-		return clientFetch('/api/follows/pub', {
+		return clientFetch('/follows/pub', {
 			method: 'DELETE',
 			headers: {
 				Accept: 'application/json',
@@ -142,7 +142,7 @@ export function postFollowsUser(userId) {
 	return (dispatch) => {
 		dispatch({ type: POST_FOLLOWS_USER_LOAD });
 
-		return clientFetch('/api/follows/user', {
+		return clientFetch('/follows/user', {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',
@@ -166,7 +166,7 @@ export function putFollowsUser(userId, putOptions) {
 	return (dispatch) => {
 		dispatch({ type: PUT_FOLLOWS_USER_LOAD });
 
-		return clientFetch('/api/follows/user', {
+		return clientFetch('/follows/user', {
 			method: 'PUT',
 			headers: {
 				Accept: 'application/json',
@@ -191,7 +191,7 @@ export function deleteFollowsUser(userId) {
 	return (dispatch) => {
 		dispatch({ type: DELETE_FOLLOWS_USER_LOAD });
 
-		return clientFetch('/api/follows/user', {
+		return clientFetch('/follows/user', {
 			method: 'DELETE',
 			headers: {
 				Accept: 'application/json',
@@ -216,7 +216,7 @@ export function postFollowsJournal(journalId) {
 	return (dispatch) => {
 		dispatch({ type: POST_FOLLOWS_JOURNAL_LOAD });
 
-		return clientFetch('/api/follows/journal', {
+		return clientFetch('/follows/journal', {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',
@@ -240,7 +240,7 @@ export function putFollowsJournal(journalId, putOptions) {
 	return (dispatch) => {
 		dispatch({ type: PUT_FOLLOWS_JOURNAL_LOAD });
 
-		return clientFetch('/api/follows/journal', {
+		return clientFetch('/follows/journal', {
 			method: 'PUT',
 			headers: {
 				Accept: 'application/json',
@@ -265,7 +265,7 @@ export function deleteFollowsJournal(journalId) {
 	return (dispatch) => {
 		dispatch({ type: DELETE_FOLLOWS_JOURNAL_LOAD });
 
-		return clientFetch('/api/follows/journal', {
+		return clientFetch('/follows/journal', {
 			method: 'DELETE',
 			headers: {
 				Accept: 'application/json',
@@ -290,7 +290,7 @@ export function postFollowsLabel(labelId) {
 	return (dispatch) => {
 		dispatch({ type: POST_FOLLOWS_LABEL_LOAD });
 
-		return clientFetch('/api/follows/label', {
+		return clientFetch('/follows/label', {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',
@@ -314,7 +314,7 @@ export function putFollowsLabel(labelId, putOptions) {
 	return (dispatch) => {
 		dispatch({ type: PUT_FOLLOWS_LABEL_LOAD });
 
-		return clientFetch('/api/follows/label', {
+		return clientFetch('/follows/label', {
 			method: 'PUT',
 			headers: {
 				Accept: 'application/json',
@@ -339,7 +339,7 @@ export function deleteFollowsLabel(labelId) {
 	return (dispatch) => {
 		dispatch({ type: DELETE_FOLLOWS_LABEL_LOAD });
 
-		return clientFetch('/api/follows/label', {
+		return clientFetch('/follows/label', {
 			method: 'DELETE',
 			headers: {
 				Accept: 'application/json',

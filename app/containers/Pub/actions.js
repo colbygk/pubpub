@@ -27,7 +27,7 @@ export function getPubData(slug) {
 	return (dispatch) => {
 		dispatch({ type: GET_PUB_DATA_LOAD });
 
-		return clientFetch('/api/pub/?slug=' + slug, {
+		return clientFetch('/pub/?slug=' + slug, {
 			method: 'GET'
 		})
 		.then((result) => {
@@ -44,7 +44,7 @@ export function updatePub(pubId, updateData) {
 	return (dispatch) => {
 		dispatch({ type: PUT_PUB_DATA_LOAD });
 
-		return clientFetch('/api/pub', {
+		return clientFetch('/pub', {
 			method: 'PUT',
 			headers: {
 				Accept: 'application/json',
@@ -74,7 +74,7 @@ export function deletePub(pubId) {
 	return (dispatch) => {
 		dispatch({ type: DELETE_PUB_LOAD });
 
-		return clientFetch('/api/pub', {
+		return clientFetch('/pub', {
 			method: 'DELETE',
 			headers: {
 				Accept: 'application/json',

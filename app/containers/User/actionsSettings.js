@@ -21,7 +21,7 @@ export const PUT_USER_FAIL = 'user/PUT_USER_FAIL';
 export function putUser(userId, putUserData) {
 	return (dispatch) => {
 		dispatch({ type: PUT_USER_LOAD });
-		return clientFetch('/api/user', {
+		return clientFetch('/user', {
 			method: 'PUT',
 			headers: {
 				Accept: 'application/json',

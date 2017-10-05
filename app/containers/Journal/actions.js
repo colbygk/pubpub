@@ -22,7 +22,7 @@ export function getJournalData(slug) {
 	return (dispatch) => {
 		dispatch({ type: GET_JOURNAL_DATA_LOAD });
 
-		return clientFetch('/api/journal?slug=' + slug, {
+		return clientFetch('/journal?slug=' + slug, {
 			method: 'GET'
 		})
 		.then((result) => {
@@ -40,7 +40,7 @@ export function putJournal(journalId, newJournalData) {
 	return (dispatch) => {
 		dispatch({ type: PUT_JOURNAL_DATA_LOAD });
 
-		return clientFetch('/api/journal', {
+		return clientFetch('/journal', {
 			method: 'PUT',
 			headers: {
 				Accept: 'application/json',

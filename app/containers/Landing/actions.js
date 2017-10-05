@@ -23,7 +23,7 @@ export function getActivities() {
 	return (dispatch) => {
 		dispatch({ type: GET_ACTIVITIES_LOAD });
 
-		return clientFetch('/api/activities?assets=true', {
+		return clientFetch('/activities?assets=true', {
 			method: 'GET'
 		})
 		.then((result) => {
@@ -40,7 +40,7 @@ export function getLandingFeatures() {
 	return (dispatch) => {
 		dispatch({ type: GET_LANDING_FEATURES_LOAD });
 
-		return clientFetch('/api/search/featured', {
+		return clientFetch('/search/featured', {
 			method: 'GET'
 		})
 		.then((result) => {

@@ -21,7 +21,7 @@ export function createHighlight(highlightObject) {
 	return (dispatch) => {
 		dispatch({ type: CREATE_HIGHLIGHT_LOAD });
 
-		return clientFetch('/api/highlight', {
+		return clientFetch('/highlight', {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',

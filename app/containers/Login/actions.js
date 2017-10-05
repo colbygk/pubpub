@@ -22,7 +22,7 @@ export function login(email, password) {
 	return (dispatch) => {
 		dispatch({ type: LOGIN_POST_LOAD });
 
-		return clientFetch('/api/login', {
+		return clientFetch('/login', {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',

@@ -19,7 +19,7 @@ export function createPub(createData) {
 	return (dispatch) => {
 		dispatch({ type: CREATE_PUB_LOAD });
 
-		return clientFetch('/api/pub', {
+		return clientFetch('/pub', {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',

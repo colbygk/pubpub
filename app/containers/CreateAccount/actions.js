@@ -26,7 +26,7 @@ export function getSignUpData(hash) {
 	return (dispatch) => {
 		dispatch({ type: GET_SIGN_UP_DATA_LOAD });
 
-		return clientFetch('/api/signup?hash=' + hash, {
+		return clientFetch('/signup?hash=' + hash, {
 			method: 'GET'
 		})
 		.then((result) => {
@@ -43,7 +43,7 @@ export function createAccount(createAccountData) {
 	return (dispatch) => {
 		dispatch({ type: CREATE_ACCOUNT_LOAD });
 
-		return clientFetch('/api/user', {
+		return clientFetch('/user', {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',

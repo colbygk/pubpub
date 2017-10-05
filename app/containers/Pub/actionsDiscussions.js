@@ -39,7 +39,7 @@ export function postDiscussion(replyRootPubId, replyParentPubId, title, descript
 	return (dispatch) => {
 		dispatch({ type: POST_DISCUSSION_LOAD });
 
-		return clientFetch('/api/pub/discussion', {
+		return clientFetch('/pub/discussion', {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',
@@ -71,7 +71,7 @@ export function putDiscussion(pubId, title, description) {
 	return (dispatch) => {
 		dispatch({ type: PUT_DISCUSSION_LOAD });
 
-		return clientFetch('/api/pub', {
+		return clientFetch('/pub', {
 			method: 'PUT',
 			headers: {
 				Accept: 'application/json',
@@ -97,7 +97,7 @@ export function postDiscussionVersion(pubId, message, isPublished, files, defaul
 	return (dispatch) => {
 		dispatch({ type: POST_DISCUSSION_VERSION_LOAD });
 
-		return clientFetch('/api/pub/version', {
+		return clientFetch('/pub/version', {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',
@@ -127,7 +127,7 @@ export function toggleCloseDiscussion(pubId, replyRootPubId, isClosed) {
 	return (dispatch) => {
 		dispatch({ type: PUT_DISCUSSION_CLOSE_LOAD });
 
-		return clientFetch('/api/pub/discussion', {
+		return clientFetch('/pub/discussion', {
 			method: 'PUT',
 			headers: {
 				Accept: 'application/json',
@@ -153,7 +153,7 @@ export function postReaction(pubId, replyRootPubId, reactionId) {
 	return (dispatch) => {
 		dispatch({ type: POST_REACTION_LOAD });
 
-		return clientFetch('/api/pub/reaction', {
+		return clientFetch('/pub/reaction', {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',
@@ -179,7 +179,7 @@ export function deleteReaction(pubId, replyRootPubId, reactionId, accountId) {
 	return (dispatch) => {
 		dispatch({ type: DELETE_REACTION_LOAD });
 
-		return clientFetch('/api/pub/reaction', {
+		return clientFetch('/pub/reaction', {
 			method: 'DELETE',
 			headers: {
 				Accept: 'application/json',

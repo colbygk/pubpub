@@ -29,7 +29,7 @@ export const CHECK_RESET_HASH_FAIL = 'resetPassword/CHECK_RESET_HASH_FAIL';
 export function postResetRequest(email) {
 	return (dispatch) => {
 		dispatch({ type: RESET_PASSWORD_LOAD });
-		return clientFetch('/api/user/password/reset', {
+		return clientFetch('/user/password/reset', {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',
@@ -52,7 +52,7 @@ export function checkResetHash(username, resetHash) {
 	return (dispatch) => {
 		dispatch({ type: CHECK_RESET_HASH_LOAD });
 
-		return clientFetch('/api/user/password/reset?resetHash=' + resetHash + '&username=' + username, {
+		return clientFetch('/user/password/reset?resetHash=' + resetHash + '&username=' + username, {
 			method: 'GET',
 			headers: {
 				Accept: 'application/json',
@@ -75,7 +75,7 @@ export function postPassword(password, username, hash) {
 	return (dispatch) => {
 		dispatch({ type: SET_PASSWORD_LOAD });
 
-		return clientFetch('/api/user/password', {
+		return clientFetch('/user/password', {
 			method: 'POST', // Changed from POST. Make sure hte rest of this request is formed properly
 			headers: {
 				Accept: 'application/json',

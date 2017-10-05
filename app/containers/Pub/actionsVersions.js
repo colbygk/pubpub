@@ -27,7 +27,7 @@ export function postVersion(pubId, message, isPublished, isRestricted, files, de
 	return (dispatch) => {
 		dispatch({ type: POST_VERSION_LOAD });
 
-		return clientFetch('/api/pub/version', {
+		return clientFetch('/pub/version', {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',
@@ -58,7 +58,7 @@ export function putVersion(pubId, versionId, isPublished, isRestricted) {
 	return (dispatch) => {
 		dispatch({ type: PUT_VERSION_LOAD });
 
-		return clientFetch('/api/pub/version', {
+		return clientFetch('/pub/version', {
 			method: 'PUT',
 			headers: {
 				Accept: 'application/json',
@@ -85,7 +85,7 @@ export function postDoi(pubId, versionId) {
 	return (dispatch) => {
 		dispatch({ type: POST_DOI_LOAD });
 
-		return clientFetch('/api/pub/version/doi', {
+		return clientFetch('/pub/version/doi', {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',

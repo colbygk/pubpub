@@ -27,7 +27,7 @@ export function postJournalSubmit(pubId, journalId) {
 	return (dispatch) => {
 		dispatch({ type: POST_JOURNAL_SUBMIT_LOAD });
 
-		return clientFetch('/api/pub/submit', {
+		return clientFetch('/pub/submit', {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',
@@ -52,7 +52,7 @@ export function putFeature(pubId, journalId, isDisplayed) {
 	return (dispatch) => {
 		dispatch({ type: PUT_FEATURE_LOAD, journalId: journalId, isDisplayed: isDisplayed });
 
-		return clientFetch('/api/pub/feature', {
+		return clientFetch('/pub/feature', {
 			method: 'PUT',
 			headers: {
 				Accept: 'application/json',
@@ -78,7 +78,7 @@ export function putPubContext(pubId, journalId) {
 	return (dispatch) => {
 		dispatch({ type: PUT_PUB_CONTEXT_LOAD, journalId: journalId, });
 
-		return clientFetch('/api/pub', {
+		return clientFetch('/pub', {
 			method: 'PUT',
 			headers: {
 				Accept: 'application/json',

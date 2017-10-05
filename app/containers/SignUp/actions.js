@@ -19,7 +19,7 @@ export function createSignUp(email) {
 	return (dispatch) => {
 		dispatch({ type: CREATE_SIGN_UP_LOAD });
 
-		return clientFetch('/api/signup', {
+		return clientFetch('/signup', {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',

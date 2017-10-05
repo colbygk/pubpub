@@ -18,7 +18,7 @@ export const GET_USER_DATA_FAIL = 'user/GET_USER_DATA_FAIL';
 export function getUserData(username) {
 	return (dispatch) => {
 		dispatch({ type: GET_USER_DATA_LOAD });
-		return clientFetch('/api/user?username=' + username, {
+		return clientFetch('/user?username=' + username, {
 			method: 'GET'
 		})
 		.then((result) => {
