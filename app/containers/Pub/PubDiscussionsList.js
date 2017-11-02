@@ -65,13 +65,17 @@ export const PubDiscussionsList = React.createClass({
 		const query = this.props.query || {};
 		const pathname = this.props.pathname;
 		const allAuthors = [
-			...discussionsData.map((discussion)=> {
+			...discussionsData.filter((item)=> {
+				return item.contributors.length && item.versions.length;
+			}).map((discussion)=> {
 				return discussion.contributors[0].user;
 			}),
 			...discussionsData.reduce((previous, current)=> {
 				return [
 					...previous, 
-					...current.children.map((discussion)=> {
+					...current.children.filter((item)=> {
+						return item.contributors.length && item.versions.length;
+					}).map((discussion)=> {
 						return discussion.contributors[0].user;
 					})
 				];
@@ -110,6 +114,9 @@ export const PubDiscussionsList = React.createClass({
 				}, discussion.title + ' ' + discussion.description + ' ');
 
 				keepResult = fuzzysearch(query.filter, threadText);
+			}
+			if (!discussion.contributors.length || !discussion.versions.length) {
+				keepResult = false;
 			}
 			return keepResult;
 		});
@@ -217,6 +224,7 @@ export const PubDiscussionsList = React.createClass({
 					}).filter((item, index)=> {
 						if (!this.props.showAllDiscussions && index >= initDiscussionCount) { return false; }
 						if (!this.props.showClosedDiscussions && item.isClosed) { return false; }
+						// if (!discussion.contributors.length) { return false; }
 						return true;
 					}).map((discussion, index)=> {
 						const author = discussion.contributors[0].user;
