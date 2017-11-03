@@ -39,6 +39,6 @@ export function s3Upload(file, progressEvent, finishEvent, index) {
 
 	const getPolicy = new XMLHttpRequest();
 	getPolicy.addEventListener('load', beginUpload);
-	getPolicy.open('GET', '/api/uploadPolicy?contentType=' + file.type);
+	getPolicy.open('GET', 'https://v2-api.pubpub.org/uploadPolicy?contentType=' + file.type);
 	getPolicy.send();
 }

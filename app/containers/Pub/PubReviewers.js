@@ -57,7 +57,7 @@ export const PubReviewers = React.createClass({
 		if (input.length < 3) {
 			callback(null, { options: null });
 		}
-		request.get('/api/search/user?q=' + input).end((err, response)=>{
+		request.get('https://v2-api.pubpub.org/search/user?q=' + input).end((err, response)=>{
 			const responseArray = (response && response.body) || [];
 			const options = responseArray.map((item)=>{
 				return {

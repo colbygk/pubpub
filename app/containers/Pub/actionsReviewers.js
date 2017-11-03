@@ -81,7 +81,7 @@ export function putReviewer(pubId, invitedReviewerId, invitationAccepted, invita
 export function getUserJournals(userId) {
 	return (dispatch) => {
 		dispatch({ type: GET_USER_JOURNALS_LOAD });
-		return clientFetch(`/api/user/journals?userId=${userId}`)
+		return clientFetch(`https://v2-api.pubpub.org/user/journals?userId=${userId}`)
 		.then((result) => {
 			dispatch({ type: GET_USER_JOURNALS_SUCCESS, result });
 		})

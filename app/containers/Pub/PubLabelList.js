@@ -137,7 +137,7 @@ export const PubLabelList = React.createClass({
 			});
 		}
 
-		request.get('/api/search/label?q=' + input).end((err, response)=>{
+		request.get('https://v2-api.pubpub.org/search/label?q=' + input).end((err, response)=>{
 			const responseArray = (response && response.body) || [];
 			this.setState({
 				asyncLabelsLoading: false,

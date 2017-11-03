@@ -35,7 +35,7 @@ export const PubJournals = React.createClass({
 		if (input.length < 3) {
 			callback(null, { options: null });
 		}
-		request.get('/api/search/journal?q=' + input).end((err, response)=>{
+		request.get('https://v2-api.pubpub.org/search/journal?q=' + input).end((err, response)=>{
 			const responseArray = (response && response.body) || [];
 			const options = responseArray.map((item)=>{
 				return {
