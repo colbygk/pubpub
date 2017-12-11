@@ -4,6 +4,7 @@ import App from 'containers/App/App';
 
 const host = window.location.hostname;
 const isJournal = host !== 'www.pubpub.org' && 
+	host !== 'v3.pubpub.org' && 
 	host !== 'dev.pubpub.org' && 
 	host !== 'staging.pubpub.org' && 
 	host !== 'localhost';
